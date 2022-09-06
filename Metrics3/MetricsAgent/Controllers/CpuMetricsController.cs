@@ -1,5 +1,7 @@
-﻿using MetricsAgent.Converters;
+﻿using AutoMapper;
+using MetricsAgent.Converters;
 using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Requests;
 using MetricsAgent.Services;
 using Microsoft.AspNetCore.Http;
@@ -11,29 +13,25 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class CpuMetricsController : ControllerBase
     {
-        #region Services
-
         private readonly ILogger<CpuMetricsController> _logger;
         private readonly ICpuMetricsRepository _cpuMetricsRepository;
-        #endregion
+        private readonly IMapper _mapper;
 
 
         public CpuMetricsController(
-            ICpuMetricsRepository cpuMetricsRepository,
-            ILogger<CpuMetricsController> logger)
+                    ICpuMetricsRepository cpuMetricsRepository,
+                    ILogger<CpuMetricsController> logger,
+                    IMapper mapper)
         {
             _cpuMetricsRepository = cpuMetricsRepository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpPost("create")]
         public IActionResult Create([FromBody] CpuMetricCreateRequest request)
         {
-            _cpuMetricsRepository.Create(new Models.CpuMetric
-            {
-                Value = request.Value,
-                Time = (int)request.Time.TotalSeconds
-            });
+            _cpuMetricsRepository.Create(_mapper.Map<CpuMetric>(request));
             return Ok();
         }
 
@@ -42,35 +40,10 @@ namespace MetricsAgent.Controllers
         public ActionResult<IList<CpuMetric>> GetCpuMetrics(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-
             _logger.LogInformation("Get cpu metrics call.");
-            return Ok(_cpuMetricsRepository.GetByTimePeriod(fromTime, toTime));
-        }
-        [HttpDelete("Delete")]
-        public IActionResult Delete([FromQuery] int id)
-        {
-            _cpuMetricsRepository.Delete(id);
-            return Ok();
-        }
-        [HttpGet("GetAll")]
-        public ActionResult<IList<CpuMetric>> GetAll()
-        {
-            return Ok(_cpuMetricsRepository.GetAll());
-        }
-        [HttpGet("GetById")]
-        public ActionResult<CpuMetric> GetById([FromQuery] int id)
-        {
-            return Ok(_cpuMetricsRepository.GetById(id));
-        }
-        [HttpPut("Update")]
-        public IActionResult Update([FromQuery]CpuMetric item)
-        {
-            _cpuMetricsRepository.Update(item);
-            return Ok();
-        }
 
-
-
-
+            return Ok(_cpuMetricsRepository.GetByTimePeriod(fromTime, toTime)
+                .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList());
+        }
     }
 }
