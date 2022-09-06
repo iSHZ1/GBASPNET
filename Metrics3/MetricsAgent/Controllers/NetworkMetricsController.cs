@@ -39,7 +39,7 @@ namespace MetricsAgent.Controllers
         public ActionResult<IList<NetworkMetric>> GetNetworkMetrics(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Get cpu metrics call.");
+            _logger.LogInformation("Get Network metrics call.");
 
             return Ok(_networkMetricsRepository.GetByTimePeriod(fromTime, toTime)
                 .Select(metric => _mapper.Map<NetworkMetricDto>(metric)).ToList());
