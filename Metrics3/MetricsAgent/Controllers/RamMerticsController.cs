@@ -27,13 +27,6 @@ namespace MetricsAgent.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] RamMetricCreateRequest request)
-        {
-            _ramMetricsRepository.Create(_mapper.Map<RamMetric>(request));
-            return Ok();
-        }
-
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public ActionResult<IList<RamMetric>> GetRamMetrics(
@@ -42,6 +35,13 @@ namespace MetricsAgent.Controllers
             _logger.LogInformation("Get Ram metrics call.");
 
             return Ok(_ramMetricsRepository.GetByTimePeriod(fromTime, toTime)
+                .Select(metric => _mapper.Map<RamMetricDto>(metric)).ToList());
+        }
+
+        [HttpGet("all")]
+        public ActionResult<IList<RamMetricDto>> GetAllCpuMetrics()
+        {
+            return Ok(_ramMetricsRepository.GetAll()
                 .Select(metric => _mapper.Map<RamMetricDto>(metric)).ToList());
         }
     }
