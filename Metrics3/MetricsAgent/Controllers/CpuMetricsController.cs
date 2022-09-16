@@ -30,7 +30,7 @@ namespace MetricsAgent.Controllers
 
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public ActionResult<IList<CpuMetric>> GetCpuMetrics(
+        public ActionResult<GetCpuMetricsResponse> GetCpuMetrics(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
             _logger.LogInformation("Get cpu metrics call.");
@@ -40,7 +40,7 @@ namespace MetricsAgent.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<CpuMetricDto>> GetAllCpuMetrics()
+        public ActionResult<GetCpuMetricsResponse> GetAllCpuMetrics()
         {
             return Ok(_cpuMetricsRepository.GetAll()
                 .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList());

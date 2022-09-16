@@ -29,7 +29,7 @@ namespace MetricsAgent.Controllers
 
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public ActionResult<IList<RamMetric>> GetRamMetrics(
+        public ActionResult<GetRamMetricsResponse> GetRamMetrics(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
             _logger.LogInformation("Get Ram metrics call.");
@@ -39,7 +39,7 @@ namespace MetricsAgent.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<RamMetricDto>> GetAllCpuMetrics()
+        public ActionResult<GetRamMetricsResponse> GetAllCpuMetrics()
         {
             return Ok(_ramMetricsRepository.GetAll()
                 .Select(metric => _mapper.Map<RamMetricDto>(metric)).ToList());

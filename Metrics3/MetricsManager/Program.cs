@@ -49,6 +49,20 @@ namespace MetricsManager
 
             #endregion
 
+            builder.Services.AddHttpClient();
+
+            builder.Services.AddHttpClient<IMetricsAgentClient, MetricsAgentClient>()
+                .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(retryCount: 3,
+                sleepDurationProvider: (attemptCount) => TimeSpan.FromSeconds(attemptCount * 2),
+                onRetry: (response, sleepDuration, attemptCount, context) => {
+
+                    var logger = builder.Services.BuildServiceProvider().GetService<ILogger<Program>>();
+                        logger.LogError(response.Exception != null ? response.Exception :
+                            new Exception($"\n{response.Result.StatusCode}: {response.Result.RequestMessage}"),
+                            $"(attempt: {attemptCount}) request exception.");
+            }
+            ));
+
             builder.Services.AddControllers()
               .AddJsonOptions(options =>
                   options.JsonSerializerOptions.Converters.Add(new CustomTimeSpanConverter()));
@@ -76,38 +90,11 @@ namespace MetricsManager
             }
 
             app.UseAuthorization();
-
+            app.UseHttpLogging();
 
             app.MapControllers();
 
             app.Run();
-        }
-
-        private static void ConfigureSqlLiteConnection(IServiceCollection services)
-        {
-            const string connectionString = "Data Source = metrics.db; Version = 3; Pooling = true; Max Pool Size = 100;";
-            var connection = new SQLiteConnection(connectionString);
-            connection.Open();
-            PrepareSchema(connection);
-        }
-
-        private static void PrepareSchema(SQLiteConnection connection)
-        {
-            using (var command = new SQLiteCommand(connection))
-            {
-                // Задаём новый текст команды для выполнения
-                // Удаляем таблицу с метриками, если она есть в базе данных
-                command.CommandText = "DROP TABLE IF EXISTS agentinfometrics";
-                // Отправляем запрос в базу данных
-                command.ExecuteNonQuery();
-
-                command.CommandText =
-                    @"CREATE TABLE agentinfometrics(id INTEGER
-                    PRIMARY KEY,
-                    AgentAddress VARCHAR(30), time INT)";
-                command.ExecuteNonQuery();
-
-            }
         }
     }
 }

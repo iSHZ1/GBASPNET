@@ -29,7 +29,7 @@ namespace MetricsAgent.Controllers
 
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public ActionResult<IList<HddMetric>> GetHddMetrics(
+        public ActionResult<GetHddMetricsResponse> GetHddMetrics(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
             _logger.LogInformation("Get hdd metrics call.");
@@ -39,7 +39,7 @@ namespace MetricsAgent.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<HddMetricDto>> GetAllCpuMetrics()
+        public ActionResult<GetHddMetricsResponse> GetAllCpuMetrics()
         {
             return Ok(_hddMetricsRepository.GetAll()
                 .Select(metric => _mapper.Map<HddMetricDto>(metric)).ToList());
