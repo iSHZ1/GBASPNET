@@ -27,13 +27,6 @@ namespace MetricsAgent.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] HddMetricCreateRequest request)
-        {
-            _hddMetricsRepository.Create(_mapper.Map<HddMetric>(request));
-            return Ok();
-        }
-
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public ActionResult<IList<HddMetric>> GetHddMetrics(
@@ -42,6 +35,13 @@ namespace MetricsAgent.Controllers
             _logger.LogInformation("Get hdd metrics call.");
 
             return Ok(_hddMetricsRepository.GetByTimePeriod(fromTime, toTime)
+                .Select(metric => _mapper.Map<HddMetricDto>(metric)).ToList());
+        }
+
+        [HttpGet("all")]
+        public ActionResult<IList<HddMetricDto>> GetAllCpuMetrics()
+        {
+            return Ok(_hddMetricsRepository.GetAll()
                 .Select(metric => _mapper.Map<HddMetricDto>(metric)).ToList());
         }
 
