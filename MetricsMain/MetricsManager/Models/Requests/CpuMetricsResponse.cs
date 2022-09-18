@@ -9,7 +9,7 @@ namespace MetricsManager.Models.Requests
         [JsonPropertyName("metrics")]
         public CpuMetric[] Metrics { get; set; }
 
-
+        //   тестил верно ли я вставляю json
         //public class Rootobject
         //{
         //    public Class1[] Property1 { get; set; }
@@ -20,9 +20,5 @@ namespace MetricsManager.Models.Requests
         //    public int value { get; set; }
         //    public int time { get; set; }
         //}
-
-
-
-
     }
 }
