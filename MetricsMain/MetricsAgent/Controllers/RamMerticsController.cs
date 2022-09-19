@@ -9,7 +9,7 @@ using AutoMapper;
 
 namespace MetricsAgent.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/metrics/ram")]
     [ApiController]
     public class RamMerticsController : ControllerBase
     {

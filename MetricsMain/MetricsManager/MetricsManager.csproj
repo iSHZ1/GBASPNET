@@ -7,6 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\CpuMigration.cs" />
+    <Compile Remove="Migrations\HddMigration.cs" />
+    <Compile Remove="Migrations\NetworkMigration.cs" />
+    <Compile Remove="Migrations\RamMigration.cs" />
+    <Compile Remove="Services\Repositorys\ICpuMetricsManagerRepository.cs" />
+    <Compile Remove="Services\Repositorys\IHddMetricsManagerRepository.cs" />
+    <Compile Remove="Services\Repositorys\Impl\CpuMetricsRepository.cs" />
+    <Compile Remove="Services\Repositorys\Impl\HddMetricsRepository.cs" />
+    <Compile Remove="Services\Repositorys\Impl\NetworkMetricsRepository.cs" />
+    <Compile Remove="Services\Repositorys\Impl\RamMetricsRepository.cs" />
+    <Compile Remove="Services\Repositorys\INetworkMetricsManagerRepository.cs" />
+    <Compile Remove="Services\Repositorys\IRamMetricsManagerRepository.cs" />
+    <Compile Remove="Services\Repositorys\ITimeEntity.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Dapper" Version="2.0.123" />

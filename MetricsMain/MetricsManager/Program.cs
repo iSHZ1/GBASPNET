@@ -54,10 +54,6 @@ namespace MetricsManager
 
             #region Configure Repository
 
-            builder.Services.AddScoped<ICpuMetricsManagerRepository, CpuMetricsRepository>();
-            builder.Services.AddScoped<IHddMetricsManagerRepository, HddMetricsRepository>();
-            builder.Services.AddScoped<INetworkMetricsManagerRepository, NetworkMetricsRepository>();
-            builder.Services.AddScoped<IRamMetricsManagerRepository, RamMetricsRepository>();
             builder.Services.AddScoped<IAgentMetricsManagerRepository, AgentMetricsRepository>();
 
             #endregion

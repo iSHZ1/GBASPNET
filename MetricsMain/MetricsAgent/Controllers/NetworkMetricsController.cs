@@ -9,7 +9,7 @@ using MetricsAgent.Services.Impl;
 
 namespace MetricsAgent.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/metrics/network")]
     [ApiController]
     public class NetworkMetricsController : ControllerBase
     {

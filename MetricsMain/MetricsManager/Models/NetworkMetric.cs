@@ -4,12 +4,8 @@ namespace MetricsManager.Models
 {
     public class NetworkMetric
     {
-        public int Id { get; set; }
-
-        public int AgentId { get; set; }
-
         [JsonPropertyName("time")]
-        public TimeSpan Time { get; set; }
+        public long Time { get; set; }
 
         [JsonPropertyName("value")]
         public int Value { get; set; }

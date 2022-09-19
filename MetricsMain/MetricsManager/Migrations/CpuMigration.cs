@@ -1,4 +1,4 @@
-﻿using FluentMigrator;
+﻿sing FluentMigrator;
 
 namespace MetricsAgent.Migrations
 {
