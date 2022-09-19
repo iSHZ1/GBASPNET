@@ -28,22 +28,15 @@ namespace MetricsAgent.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] CpuMetricCreateRequest request)
-        {
-            _cpuMetricsRepository.Create(_mapper.Map<CpuMetric>(request));
-            return Ok();
-        }
-
-
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public ActionResult<GetCpuMetricsResponse> GetCpuMetrics(
             [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
-            _logger.LogInformation("Get cpu metrics call.");
-
-            return Ok(_cpuMetricsRepository.GetByTimePeriod(fromTime, toTime)
-                .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList());
+            return Ok(new GetCpuMetricsResponse
+            {
+                Metrics = _cpuMetricsRepository.GetByTimePeriod(fromTime, toTime)
+                .Select(metric => _mapper.Map<CpuMetricDto>(metric)).ToList()
+            });
         }
 
         [HttpGet("all")]
